@@ -1,25 +1,24 @@
 import sys
 import time
-from typing import List, FrozenSet, Tuple, Type, Iterable
+from typing import FrozenSet, Iterable, List, Tuple, Type
 
-import libcst as cst
 import click
-from pyemojify import emojify
+import libcst as cst
 
 from pybetter.improvements import (
-    FixNotInConditionOrder,
     BaseImprovement,
-    FixMutableDefaultArgs,
-    FixParenthesesInReturn,
-    FixMissingAllAttribute,
-    FixEqualsNone,
     FixBooleanEqualityChecks,
+    FixEqualsNone,
+    FixMissingAllAttribute,
+    FixMutableDefaultArgs,
+    FixNotInConditionOrder,
+    FixNotIsConditionOrder,
+    FixParenthesesInReturn,
     FixTrivialFmtStringCreation,
     FixTrivialNestedWiths,
     FixUnhashableList,
-    FixNotIsConditionOrder,
 )
-from pybetter.utils import resolve_paths, create_diff, prettify_time_interval
+from pybetter.utils import create_diff, prettify_time_interval, resolve_paths
 
 ALL_IMPROVEMENTS = (
     FixNotInConditionOrder,
@@ -44,11 +43,7 @@ def filter_improvements_by_code(code_list: str) -> FrozenSet[str]:
 
     wrong_codes = codes.difference(all_codes)
     if wrong_codes:
-        print(
-            emojify(
-                f":no_entry_sign: Unknown improvements selected: {','.join(wrong_codes)}"
-            )
-        )
+        print(f"Unknown improvements selected: {','.join(wrong_codes)}")
         return frozenset()
 
     return codes
@@ -118,17 +113,13 @@ def main(
     paths, noop: bool, show_diff: bool, selected: str, excluded: str, exit_code: int
 ):
     if not paths:
-        print(emojify("Nothing to do. :sleeping:"))
+        print("Nothing to do.")
         return
 
     selected_improvements = list(ALL_IMPROVEMENTS)
 
     if selected and excluded:
-        print(
-            emojify(
-                ":no_entry_sign: '--select' and '--exclude' options are mutually exclusive!"
-            )
-        )
+        print("'--select' and '--exclude' options are mutually exclusive!")
         return
 
     if selected:
@@ -149,7 +140,7 @@ def main(
         ]
 
     if not selected_improvements:
-        print(emojify(":sleeping: No improvements to apply."))
+        print("No improvements to apply.")
         return
 
     python_files = filter(lambda fn: fn.endswith(".py"), resolve_paths(*paths))
@@ -201,7 +192,7 @@ def main(
             print()
 
     time_taken = prettify_time_interval(time.process_time() - total_start_ts)
-    print(emojify(f":sparkles: All done! :sparkles: :clock2: {time_taken}"))
+    print(emojify(f"All done! {time_taken}"))
 
     if are_fixes_applied:
         sys.exit(exit_code)
