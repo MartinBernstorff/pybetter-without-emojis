@@ -241,8 +241,8 @@ def f():
 
 ```console
 
-  - repo: https://github.com/lensvol/pybetter
-    rev: release-0.3.7
+  - repo: https://github.com/MartinBernstorff/pybetter-without-emojis
+    rev: master
     hooks:
     - id: pybetter
 
