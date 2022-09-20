@@ -192,7 +192,7 @@ def main(
             print()
 
     time_taken = prettify_time_interval(time.process_time() - total_start_ts)
-    print(emojify(f"All done! {time_taken}"))
+    print(f"All done! {time_taken}")
 
     if are_fixes_applied:
         sys.exit(exit_code)
